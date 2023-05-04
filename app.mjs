@@ -1,6 +1,6 @@
-import { h, html, render, useState, useEffect } from 'https://esm.sh/htm@3.1.1/preact/standalone.module.js'
+import { h, Fragment, render } from 'https://esm.sh/preact';
+import { useState, useEffect } from 'https://esm.sh/preact/hooks';
 import test2 from "./test2.mjs";
-import { Router } from "https://esm.sh/preact-router@4.1.0";
 
 const { test } = await import("./test.mjs");
 
@@ -9,6 +9,16 @@ console.log(test2("hi2"));
 
 console.log(await Promise.resolve("awaited"));
 
+function ListOfStuff() {
+  const [stuff, setStuff] = useState([]);
+
+  return h("div", null,
+    h("button", { onClick: () => { setStuff([...stuff, Math.random()]) } }, "Click Me!"),
+    h("ul", null, stuff.map(thing => h("li", null, thing))),
+  )
+}
+
+// https://www.skypack.dev/
 // https://github.com/preactjs/preact-router
 // https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html
 // https://github.com/developit/htm
@@ -21,29 +31,24 @@ console.log(await Promise.resolve("awaited"));
  * @param {string} props.title
  * @returns {VNode}
  */
-// function App(props) {
-//   const [oldTitle] = useState(document.title);
-//   useEffect(() => {
-//     document.title = props.title;
+function App(props) {
+  const [oldTitle] = useState(document.title);
+  useEffect(() => {
+    document.title = props.title;
 
-//     return () => {
-//       document.title = oldTitle;
-//     }
-//   }, [props.title])
-//   return html`<h1>Hello ${props.name} ${props.title}!</h1>`;
-// }
+    return () => {
+      document.title = oldTitle;
+    }
+  }, [props.title])
 
-const App = () => (
-  html`<div class="app">
-    <${Router}>
-      <div path="/">Root</div>
-      <div path="/foo">Foo</div>
-    </${Router}>
-  </div>`
-);
+  return h("div", null,
+    h("h1", null, h(Fragment, null, "Hello ", props.name, " ", props.title, "!")),
+    h(ListOfStuff),
+  )
+}
+
 
 const root = document.getElementById("app");
 root.innerHTML = ""
-// html`<${App} name="World" title="bar" />`
 const rootElement = h(App, { name: "World", title: "bar" });
 render(rootElement, root);
