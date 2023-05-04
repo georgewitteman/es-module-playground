@@ -1,7 +1,8 @@
-import { h, html, render, useState, useEffect } from 'https://unpkg.com/htm@3.1.1/preact/standalone.module.js'
+import { h, html, render, useState, useEffect } from 'https://esm.sh/htm@3.1.1/preact/standalone.module.js'
 import test2 from "./test2.mjs";
+import { Router } from "https://esm.sh/preact-router@4.1.0";
 
-const {test} = await import("./test.mjs");
+const { test } = await import("./test.mjs");
 
 console.log(test("hi"));
 console.log(test2("hi2"));
@@ -20,17 +21,26 @@ console.log(await Promise.resolve("awaited"));
  * @param {string} props.title
  * @returns {VNode}
  */
-function App(props) {
-  const [oldTitle] = useState(document.title);
-  useEffect(() => {
-    document.title = props.title;
+// function App(props) {
+//   const [oldTitle] = useState(document.title);
+//   useEffect(() => {
+//     document.title = props.title;
 
-    return () => {
-      document.title = oldTitle;
-    }
-  }, [props.title])
-  return html`<h1>Hello ${props.name} ${props.title}!</h1>`;
-}
+//     return () => {
+//       document.title = oldTitle;
+//     }
+//   }, [props.title])
+//   return html`<h1>Hello ${props.name} ${props.title}!</h1>`;
+// }
+
+const App = () => (
+  html`<div class="app">
+    <${Router}>
+      <div path="/">Root</div>
+      <div path="/foo">Foo</div>
+    </${Router}>
+  </div>`
+);
 
 const root = document.getElementById("app");
 root.innerHTML = ""
