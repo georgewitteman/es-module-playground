@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <p className="max-w-lg">
+    <p className="m-auto max-w-md px-2">
       <Link href="/test">Test</Link>
       <Image
         src="/vercel.svg"
